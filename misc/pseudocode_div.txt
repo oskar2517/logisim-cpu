@@ -1,0 +1,21 @@
+neg := A < 0 ^ B < 0
+
+if A < 0:
+    A := -A
+
+if B < 0:
+    B := -B
+
+Q := 0
+S := 7
+
+while A >= B:
+    if (A >> S) >= B:
+        Q := Q | (1 << S)
+        A := A - (B << S)
+    S := S - 1
+
+if neg:
+    Q := -Q
+
+return Q

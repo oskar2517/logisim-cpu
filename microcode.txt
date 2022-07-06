@@ -1,0 +1,160 @@
+0: SUB; // Configures ALU to perform subtraction
+1: LRO; // Loads data on BUS into output register
+2: CPC; // Increments program counter
+3: MCR; // Resets microcode offset
+4: ERAM; // Puts data on address in MAR on BUS
+5: LRAM; // Writes data on BUS at address in MAR in RAM
+6: LM; // Loads memory address from BUS
+7: EPC; // Puts program counter on BUS
+8: LPC; // Loads program counter from BUS
+9: EIR; // Puts data of current instruction on BUS and allows microcode controller to access opcode
+10: LIR; // Loads instruction from BUS
+11: ERT; // Puts data from temp ALU register on internal BUS
+12: ER2; // Puts data in register 2 on BUS
+13: LR2; // Loads data on BUS into register 2
+14: ER1; // Puts data in register 1 on BUS
+15: LR1; // Loads data on BUS into register 1
+16: LADD; // Loads A and B from registers into adder
+17: EADD; // Allows temp register to load result of addition
+18: LMUL; // Loads A and B from registers into multiplier
+19: EMUL; // Allows temp register to load result of multiplication
+20: LDIV; // Loads A and B from registers into divider
+21: EDIV; // Allows temo register to load result of division
+22: LPCZ; // Load program counter from BUS if ZERO flag is set
+23: LPCC; // Load program counter from BUS if CARRY flag is set
+24: LPCNZ; // Load program counter from BUS if ZERO flag is not set
+25: LPCCZ; // Load program counter from BUS if ZERO and CARRY flags are set
+26: MCO0; // First bit of instruction offset
+27: MCO1; // Second bit of instruction offset
+28: MCO2; // Third bit of instruction offset
+29: MCO3; // Fourth bit of instruction offset
+30: JMP; // Jump to offset defined by MCO
+31: BR1; // Jump to offset defined by MCO if value on BUS is 0
+
+assemblerConfig {
+    instructionWidth: 16;
+    opCodeWidth: 4;
+}
+
+proc fetch {
+    EPC, LM;
+    ERAM;
+    ERAM, LIR;
+    CPC;
+}
+
+proc reset {
+    MCR;
+}
+
+ins lda {
+    inline fetch;
+    EIR, LM;
+    ERAM;
+    ERAM, LR1;
+    inline reset;
+}
+
+ins sta {
+    inline fetch;
+    EIR, LM;
+    LRAM, ER1;
+    inline reset;
+}
+
+ins add {
+    inline fetch;
+    EIR, LM;
+    ERAM;
+    ERAM, LR2;
+    LADD, EADD;
+    ERT, LR1;
+    inline reset;
+}
+
+ins sub {
+    inline fetch;
+    EIR, LM;
+    ERAM;
+    ERAM, LR2;
+    LADD, SUB, EADD;
+    ERT, LR1;
+    inline reset;
+}
+
+ins mul {
+    inline fetch;
+    EIR, LM;
+    ERAM;
+    ERAM, LR2;
+    LMUL;
+    MCO3, BR1; // JMP 8
+    EMUL;
+    ERT, LR1;
+    inline reset;
+}
+
+ins div {
+    inline fetch;
+    EIR, LM;
+    ERAM;
+    ERAM, LR2;
+    LDIV;
+    MCO3, BR1; // JMP 8
+    EDIV;
+    ERT, LR1;
+    inline reset;
+}
+
+ins mao {
+    inline fetch;
+    ER1, LRO;
+    inline reset;
+}
+
+ins cmp {
+    inline fetch;
+    EIR, LM;
+    ERAM;
+    ERAM, LR2;
+    LADD, SUB, EADD;
+    inline reset;
+}
+
+ins jmp {
+    inline fetch;
+    EIR, LPC;
+    inline reset;
+}
+
+// Branch if A == B
+ins bre {
+    inline fetch;
+    EIR, LPCZ;
+    inline reset;
+}
+
+// Branch if A != B
+ins brn {
+    inline fetch;
+    EIR, LPCNZ;
+    inline reset;
+}
+
+// Branch if A > B
+ins brg {
+    inline fetch;
+    EIR, LPCC;
+    inline reset;
+}
+
+// Branch if A < B
+ins brl {
+    inline fetch;
+    EIR, LPCCZ;
+    inline reset;
+}
+
+ins hlt {
+    JMP;
+}

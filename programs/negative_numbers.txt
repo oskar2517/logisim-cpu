@@ -1,0 +1,6 @@
+lda a
+add b
+mao
+
+a: -123
+b: 200

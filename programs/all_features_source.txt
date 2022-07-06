@@ -1,0 +1,10 @@
+; (1 + 2 + 3 - 4) * 5 / 2
+
+LOAD 0x9 ; acc = 1
+ADD 0xA ; acc = 3
+ADD 0xB ; acc = 6
+SUB 0xC ; acc = 2
+MUL 0xD ; acc = 10
+DIV 0xE ; acc = 5
+MAO ; Result = 5
+HALT

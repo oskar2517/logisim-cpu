@@ -1,0 +1,20 @@
+lda one
+mao
+
+inc:
+    add one
+    mao
+    cmp five
+    brz dec
+    jmp inc
+
+dec:
+    sub one
+    mao
+    cmp zero
+    brz inc
+    jmp dec
+
+zero: 0
+one: 1
+five: 5
