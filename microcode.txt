@@ -63,7 +63,6 @@ ins sta {
 }
 
 // Loads value of address found at immediate address
-// TODO: remove useless LR1;
 ins ldd {
     inline fetch;
     EIR, LM;
