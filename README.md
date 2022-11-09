@@ -20,7 +20,7 @@ Refer to the [assembler](https://github.com/oskar2517/logisim-assembler) I creat
 | 0x0    | lda      | \<addr\>  | Loads value at \<addr\> into register A.                              |
 | 0x1    | sta      | \<addr\>  | Stores value in register A at \<addr\>.                               |
 | 0x2    | ldd      | \<addr\>  | Loads value of address stored at \<addr\> into register A.            |
-| 0x3    | stt      | \<addr\>  | Stores value of register A at address stored at <addr>.               |
+| 0x3    | stt      | \<addr\>  | Stores value of register A at address stored at \<addr\>.               |
 | 0x4    | add      | \<addr\>  | Adds value stored at \<addr\> to value in register A.                 |
 | 0x5    | sub      | \<addr\>  | Subtracts value stored at \<addr\> from value in register A.          |
 | 0x6    | mul      | \<addr\>  | Multiplies value in register A with value stored at \<addr\>.         |
